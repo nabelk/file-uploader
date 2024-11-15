@@ -4,21 +4,26 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node app"
+    "start": "node app",
+    "build:css": "npx tailwindcss -i ./public/css/input.css -o ./public/css/output.css --watch"
   },
   "keywords": [],
   "author": "nabelk",
   "license": "ISC",
   "devDependencies": {
-    "prisma": "^5.22.0"
+    "multer": "^1.4.5-lts.1",
+    "prisma": "^5.22.0",
+    "tailwindcss": "^3.4.14"
   },
   "dependencies": {
     "@quixo3/prisma-session-store": "^3.1.13",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
     "express": "^4.21.1",
     "express-session": "^1.18.1",
     "express-validator": "^7.2.0",
+    "flowbite": "^2.5.2",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0"
   }
