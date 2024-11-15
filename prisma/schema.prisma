@@ -41,9 +41,9 @@ model Folder {
 }
 
 model File {
-  id Int @default(autoincrement())
-  filename String @unique
+  id Int @default(autoincrement()) @unique
   mimetype String
+  filename String 
   size Int
   url String
   uploadedAt DateTime @default(now())
