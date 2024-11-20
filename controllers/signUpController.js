@@ -1,8 +1,6 @@
 const bcrypt = require("bcryptjs");
 const { check, body, validationResult } = require("express-validator");
-const { PrismaClient } = require("@prisma/client");
-
-const prisma = new PrismaClient();
+const prisma = require("../prisma/queries");
 
 const validateUser = [
   check("firstName")
@@ -57,14 +55,12 @@ const createUser = async (req, res, next) => {
       }
 
       try {
-        const user = await prisma.user.create({
-          data: {
-            firstName,
-            lastName,
-            email,
-            password: hashedPassword,
-          },
-        });
+        const user = await prisma.createUser(
+          firstName,
+          lastName,
+          email,
+          hashedPassword
+        );
 
         req.login(user, (err) => {
           if (err) return next(err);
@@ -72,6 +68,14 @@ const createUser = async (req, res, next) => {
           res.redirect("/");
         });
       } catch (err) {
+        if (err.code === "P2002") {
+          return res.render("signup", {
+            errorMessages: { email: ["Email has been taken"] },
+            formData: { firstName, lastName, email },
+            isAuth: false,
+          });
+        }
+
         return next(err);
       }
     });
