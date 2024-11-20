@@ -6,7 +6,7 @@ const loginAuth = async (req, res, next) => {
       return next(err);
     }
     if (!user) {
-      return res.render("index", { message: info.message });
+      return res.render("index", { message: info.message, isAuth: false });
     }
 
     req.logIn(user, (err) => {
