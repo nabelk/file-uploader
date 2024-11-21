@@ -40,7 +40,7 @@ const fileUpload = async (req, res) => {
         await prisma.uplodaFile(
           originalname,
           req.user.id,
-          data.path,
+          data?.path,
           path,
           mimetype,
           size
