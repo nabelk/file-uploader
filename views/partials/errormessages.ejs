@@ -1,0 +1,8 @@
+<% if (typeof errorMessages !== 'undefined') { %> <%if(errorMessages[field]) {
+%>
+<div class="pt-2 pl-2">
+  <% errorMessages[field].forEach(err => {%>
+  <p class="text-sm mb-[2px] text-red-800 rounded-lg"><%= err %></p>
+  <% }) %>
+</div>
+<% } }%>

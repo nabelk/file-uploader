@@ -1,0 +1,353 @@
+<div class="sm:ml-64">
+  <div class="mt-14">
+    <nav class="flex p-3" aria-label="Breadcrumb">
+      <ol
+        class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse"
+      >
+        <li class="inline-flex items-center">
+          <a
+            href="/"
+            class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-sky-600"
+          >
+            <%= user.fullName %>
+          </a>
+        </li>
+        <% if(data?.folderName) {%>
+        <li aria-current="page">
+          <div class="flex items-center">
+            <svg
+              class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 6 10"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m1 9 4-4-4-4"
+              />
+            </svg>
+            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2"
+              ><%= data.folderName %></span
+            >
+          </div>
+        </li>
+        <% } %>
+      </ol>
+    </nav>
+
+    <!-- Modal toggle -->
+    <div class="px-3 mb-3 flex gap-2">
+      <% if(isIndex){ %> <%- include('newFolderModal') %> <% } %> <%-
+      include('newFileModal') %>
+    </div>
+
+    <div class="bg-neutral-100 shadow overflow-x-auto">
+      <table class="w-full table-auto">
+        <thead>
+          <tr class="text-left bg-gray-200">
+            <th class="px-4 py-2">Name</th>
+            <th class="px-4 py-2">Created At</th>
+            <th class="px-4 py-2">File Size</th>
+            <th class="px-4 py-2">Type</th>
+            <th class="px-4 py-2">
+              <span class="sr-only">Actions</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Folder Row Example -->
+          <% if(data){ %> <% if(isIndex){ %> <% data.folders.forEach(f => { %>
+          <tr class="border-b hover:bg-gray-100 cursor-pointer">
+            <td
+              class="px-4 py-2 flex items-center"
+              onclick="window.location='/folder/<%= f.id %>/<%= f.folderName %>'"
+            >
+              <span><i class="fas fa-folder w-6 h-6 text-yellow-300"></i></span>
+              <span class="ml-1"><%= f.folderName%></span>
+            </td>
+
+            <td
+              data-label="Created At"
+              class="px-4 py-2"
+              onclick="window.location='/folder/<%= f.id %>/<%= f.folderName %>'"
+            >
+              <%= f.createdAt %>
+            </td>
+
+            <td
+              data-label="Size"
+              class="px-4 py-2"
+              onclick="window.location='/folder/<%= f.id %>/<%= f.folderName %>'"
+            >
+              <%= f.totalFolderSize || '--' %>
+            </td>
+            <td
+              data-label="Type"
+              class="px-4 py-2"
+              onclick="window.location='/folder/<%= f.id %>/<%= f.folderName %>'"
+            >
+              Folder
+            </td>
+            <td class="px-4 py-2 flex items-center justify-end">
+              <button
+                id="folder-<%= f.id %>-dropdown-button"
+                data-dropdown-toggle="folder-<%= f.id %>-dropdown"
+                class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
+                type="button"
+              >
+                <svg
+                  class="w-5 h-5"
+                  aria-hidden="true"
+                  fill="currentColor"
+                  viewbox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"
+                  />
+                </svg>
+              </button>
+              <div
+                id="folder-<%= f.id %>-dropdown"
+                class="hidden z-10 w-44 bg-neutral-100 rounded divide-y divide-gray-100 shadow"
+              >
+                <div class="py-1">
+                  <a
+                    data-modal-target="delFolder-<%= f.id %>-popup-modal"
+                    data-modal-toggle="delFolder-<%= f.id %>-popup-modal"
+                    class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Delete
+                  </a>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <div
+            id="delFolder-<%= f.id %>-popup-modal"
+            tabindex="-1"
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+          >
+            <div class="relative p-4 w-full max-w-md max-h-full">
+              <div class="relative bg-neutral-100 rounded-lg shadow">
+                <button
+                  type="button"
+                  class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                  data-modal-hide="delFolder-<%= f.id %>-popup-modal"
+                >
+                  <svg
+                    class="w-3 h-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 14 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                    />
+                  </svg>
+                  <span class="sr-only">Close modal</span>
+                </button>
+                <div class="p-4 md:p-5 text-center">
+                  <svg
+                    class="mx-auto mb-4 text-gray-400 w-12 h-12"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
+                  <h3 class="mb-5 text-lg font-normal text-gray-500">
+                    Are you sure you want to delete '<%= f.folderName %>' folder
+                    and all of it's contents?
+                  </h3>
+                  <form
+                    action="/folder/<%= f.id %>/<%= f.folderName %>?_method=DELETE"
+                    method="POST"
+                  >
+                    <input type="hidden" name="_method" value="DELETE" />
+                    <button
+                      data-modal-hide="delFolder-<%= f.id %>-popup-modal"
+                      type="submit"
+                      class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
+                    >
+                      Yes, I'm sure
+                    </button>
+                  </form>
+
+                  <button
+                    data-modal-hide="delFolder-<%= f.id %>-popup-modal"
+                    type="button"
+                    class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-neutral-100 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-sky-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
+                  >
+                    No, cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <% });}%> <% data.files.forEach(f => { %>
+
+          <tr
+            class="border-b hover:bg-gray-100 cursor-pointer clickable-row"
+            onclick="document.getElementById('file-<%= f.id %>-dropdown-button').click()"
+          >
+            <td class="px-4 py-2 flex items-center">
+              <span><i class="<%= f.iconFasClass%> w-6 h-6"></i></span>
+
+              <span class="ml-1"><%= f.filename %></span>
+            </td>
+            <td class="px-4 py-2" data-label="Created At">
+              <%= f.uploadedAt %>
+            </td>
+            <td class="px-4 py-2" data-label="Size"><%= f.size %></td>
+            <td class="px-4 py-2" data-label="Type"><%= f.fileType %></td>
+            <td class="px-4 py-2 flex items-center justify-end">
+              <button
+                id="file-<%= f.id %>-dropdown-button"
+                data-dropdown-toggle="file-<%= f.id %>-dropdown"
+                onclick="document.getElementById('file-<%= f.id %>-dropdown-button').click()"
+                class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
+                type="button"
+              >
+                <svg
+                  class="w-5 h-5"
+                  aria-hidden="true"
+                  fill="currentColor"
+                  viewbox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"
+                  />
+                </svg>
+              </button>
+              <div
+                id="file-<%= f.id %>-dropdown"
+                class="hidden z-10 w-44 bg-neutral-100 rounded divide-y divide-gray-100 shadow"
+              >
+                <ul
+                  class="py-1 text-sm text-gray-700"
+                  aria-labelledby="file-<%= f.id %>-dropdown-button"
+                >
+                  <li>
+                    <a
+                      href="/download/<%= f.userId %>/<%= f.id %>"
+                      class="block py-2 px-4 hover:bg-gray-100"
+                      >Download</a
+                    >
+                  </li>
+                  <li>
+                    <a href="#" class="block py-2 px-4 hover:bg-gray-100"
+                      >Edit</a
+                    >
+                  </li>
+                </ul>
+                <div class="py-1">
+                  <a
+                    data-modal-target="delFile-<%= f.id %>-popup-modal"
+                    data-modal-toggle="delFile-<%= f.id %>-popup-modal"
+                    class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Delete
+                  </a>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <div
+            id="delFile-<%= f.id %>-popup-modal"
+            tabindex="-1"
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+          >
+            <div class="relative p-4 w-full max-w-md max-h-full">
+              <div class="relative bg-neutral-100 rounded-lg shadow">
+                <button
+                  type="button"
+                  class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                  data-modal-hide="delFile-<%= f.id %>-popup-modal"
+                >
+                  <svg
+                    class="w-3 h-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 14 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                    />
+                  </svg>
+                  <span class="sr-only">Close modal</span>
+                </button>
+                <div class="p-4 md:p-5 text-center">
+                  <svg
+                    class="mx-auto mb-4 text-gray-400 w-12 h-12"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
+                  <h3 class="mb-5 text-lg font-normal text-gray-500">
+                    Are you sure you want to delete '<%= f.filename %>'?
+                  </h3>
+                  <form
+                    action="/deleteFile/<%= f.id %>?_method=DELETE"
+                    method="POST"
+                  >
+                    <input type="hidden" name="_method" value="DELETE" />
+                    <button
+                      data-modal-hide="delFile-<%= f.id %>-popup-modal"
+                      type="submit"
+                      class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
+                    >
+                      Yes, I'm sure
+                    </button>
+                  </form>
+
+                  <button
+                    data-modal-hide="delFile-<%= f.id %>-popup-modal"
+                    type="button"
+                    class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-neutral-100 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-sky-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
+                  >
+                    No, cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% });%> <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
