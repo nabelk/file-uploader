@@ -37,5 +37,5 @@ app.use((err, req, res, next) => {
   res.status(500).render("500", { isAuth: false });
 });
 
-const PORT = 3000 || process.env.PORT;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT);
