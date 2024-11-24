@@ -19,13 +19,23 @@ const showFolder = async (req, res, next) => {
   const warningMessage = req.flash("warning");
   const dangerMessage = req.flash("danger");
 
-  const { folderId, folderName } = req.params;
-  if (isAuth) {
+  const { folderId, folderName, userId } = req.params;
+
+  if (isAuth && Number(userId) === req.user.id) {
     try {
       let [folders, files] = await Promise.all([
         prisma.getFolders(req.user.id),
         prisma.getFiles(req.user.id, folderId),
       ]);
+
+      const isFolder = folders.find(
+        (f) => f.folderName === folderName && f.id === folderId
+      );
+
+      if (!isFolder) {
+        req.flash("warning", `No folder name '${folderName}' found`);
+        return res.redirect("/");
+      }
 
       files = files.map((file) => ({
         ...file,
@@ -41,8 +51,9 @@ const showFolder = async (req, res, next) => {
         user: {
           fullName: `${req.user.firstName} ${req.user.lastName}`,
           email: req.user.email,
+          id: req.user.id,
         },
-        newFileFormAction: `/folder/${folderId}/${folderName}`,
+        newFileFormAction: `/folder/${req.user.id}/${folderId}/${folderName}`,
         isIndex: false,
         successMessage,
         dangerMessage,
@@ -75,7 +86,7 @@ const createFolder = async (req, res) => {
 const createFileInFolder = async (req, res) => {
   const isAuth = req.isAuthenticated();
   let { originalname, mimetype, path, size, buffer } = req.file;
-  const { folderId, folderName } = req.params;
+  const { folderId, folderName, userId } = req.params;
   const filename = convertUniqueSanitize(originalname); //PRODUCTION
   const { isValidType, msg } = await fileFilter({ mimetype, buffer }); //PRODUCTION
 
@@ -90,7 +101,7 @@ const createFileInFolder = async (req, res) => {
     return res.redirect(`/folder/${folderId}/${folderName}`);
   }
 
-  if (isAuth) {
+  if (isAuth && Number(userId) === req.user.id) {
     //PRODUCTION
     const { data, error } =
       NODE_ENV === "production" &&
@@ -118,16 +129,16 @@ const createFileInFolder = async (req, res) => {
         req.flash("danger", `File upload failed in '${folderName}' `);
       }
     }
-    return res.redirect(`/folder/${folderId}/${folderName}`);
+    return res.redirect(`/folder/${req.user.id}/${folderId}/${folderName}`);
   }
   return res.redirect("/");
 };
 
 const deleteFolder = async (req, res) => {
-  const { folderId, folderName } = req.params;
+  const { folderId, folderName, userId } = req.params;
   const isAuth = req.isAuthenticated();
 
-  if (isAuth) {
+  if (isAuth && Number(userId) === req.user.id) {
     const path = new URL(req.headers.referer).pathname;
     try {
       const folder = await prisma.deleteFolder(folderName, folderId);

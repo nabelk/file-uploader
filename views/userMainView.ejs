@@ -64,7 +64,7 @@
           <tr class="border-b hover:bg-gray-100 cursor-pointer">
             <td
               class="px-4 py-2 flex items-center"
-              onclick="window.location='/folder/<%= f.id %>/<%= f.folderName %>'"
+              onclick="window.location='/folder/<%= user.id %>/<%= f.id %>/<%= f.folderName %>'"
             >
               <span><i class="fas fa-folder w-6 h-6 text-yellow-300"></i></span>
               <span class="ml-1"><%= f.folderName%></span>
@@ -73,7 +73,7 @@
             <td
               data-label="Created At"
               class="px-4 py-2"
-              onclick="window.location='/folder/<%= f.id %>/<%= f.folderName %>'"
+              onclick="window.location='/folder/<%= user.id %>/<%= f.id %>/<%= f.folderName %>'"
             >
               <%= f.createdAt %>
             </td>
@@ -81,14 +81,14 @@
             <td
               data-label="Size"
               class="px-4 py-2"
-              onclick="window.location='/folder/<%= f.id %>/<%= f.folderName %>'"
+              onclick="window.location='/folder/<%= user.id %>/<%= f.id %>/<%= f.folderName %>'"
             >
               <%= f.totalFolderSize || '--' %>
             </td>
             <td
               data-label="Type"
               class="px-4 py-2"
-              onclick="window.location='/folder/<%= f.id %>/<%= f.folderName %>'"
+              onclick="window.location='/folder/<%= user.id %>/<%= f.id %>/<%= f.folderName %>'"
             >
               Folder
             </td>
@@ -178,7 +178,7 @@
                     and all of it's contents?
                   </h3>
                   <form
-                    action="/folder/<%= f.id %>/<%= f.folderName %>?_method=DELETE"
+                    action="/folder/<%= user.id %>/<%= f.id %>/<%= f.folderName %>?_method=DELETE"
                     method="POST"
                   >
                     <input type="hidden" name="_method" value="DELETE" />

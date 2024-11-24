@@ -39,6 +39,7 @@ const showIndex = async (req, res, next) => {
         user: {
           fullName: `${req.user.firstName} ${req.user.lastName}`,
           email: req.user.email,
+          id: req.user.id,
         },
         newFileFormAction: `/upload`,
         isIndex: true,

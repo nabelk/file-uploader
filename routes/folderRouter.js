@@ -4,11 +4,11 @@ const multerUpload = require("../config/multer");
 
 router.post("/new", folderController.createFolder);
 router.post(
-  "/:folderId/:folderName",
+  "/:userId/:folderId/:folderName",
   multerUpload.single("file"),
   folderController.createFileInFolder
 );
-router.get("/:folderId/:folderName", folderController.showFolder);
-router.delete("/:folderId/:folderName", folderController.deleteFolder);
+router.get("/:userId/:folderId/:folderName", folderController.showFolder);
+router.delete("/:userId/:folderId/:folderName", folderController.deleteFolder);
 
 module.exports = router;
