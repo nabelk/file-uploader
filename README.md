@@ -59,7 +59,7 @@
 
 ## Deployment
 
-- Hosted on Neon (db) & Koyeb (server)
+- Hosted on Neon (db) & Railway (server)
 
 ## Contact
 
